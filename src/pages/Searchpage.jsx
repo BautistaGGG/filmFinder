@@ -1,38 +1,53 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Swal from 'sweetalert2'; 
-import Navbar from '../componentes/Navbar';
+import { FaSearch, FaHeart, FaMoon, FaSun } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 import placeholder from '../assets/placeholder.svg';
-import Icono from '../assets/Icon.png';
+import Footer from '../componentes/Footer';
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
-  const [error, setError] = useState('');
+  const [theme, setTheme] = useState('light'); // Modo claro/oscuro
 
-  const fetchMovies = async (page = 1) => {
-    setError('');
-    setMovies([]);
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark');
+  };
 
+  const fetchMovies = async () => {
     if (!query.trim()) {
-      setError('Ingresa una película para buscar en la base de datos.');
+      Swal.fire({
+        title: 'Error',
+        text: 'Por favor, ingresa un término de búsqueda.',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+      });
       return;
     }
 
     try {
-      const response = await fetch(`https://www.omdbapi.com/?apikey=1b3bb8c1&s=${query}&page=${page}`);
+      const response = await fetch(
+        `https://www.omdbapi.com/?apikey=1b3bb8c1&s=${query}`
+      );
       const data = await response.json();
-
       if (data.Response === 'False') {
-        setError(data.Error || 'No se encontraron resultados.');
+        Swal.fire({
+          title: 'No encontrado',
+          text: 'No se encontraron películas con ese término.',
+          icon: 'info',
+          confirmButtonText: 'Entendido',
+        });
       } else {
         setMovies(data.Search);
-        setTotalResults(parseInt(data.totalResults, 10));
       }
-    } catch (err) {
-      setError('Ocurrió un error al cargar la data: ' + err.message);
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Ocurrió un problema al buscar las películas.',
+        icon: 'error',
+        confirmButtonText: 'Entendido',
+      });
     }
   };
 
@@ -43,18 +58,15 @@ const SearchPage = () => {
     if (!isAlreadyAdded) {
       watchlist.push(movie);
       localStorage.setItem('watchlist', JSON.stringify(watchlist));
-
-      // SweetAlert2: Notificación de éxito
       Swal.fire({
-        title: 'Agregado a la Watchlist',
-        text: `${movie.Title} ha sido agregado correctamente.`,
+        title: 'Agregado',
+        text: `${movie.Title} fue agregada a tu Watchlist.`,
         icon: 'success',
         confirmButtonText: 'OK',
       });
     } else {
-      // SweetAlert2: Notificación de duplicado
       Swal.fire({
-        title: 'Ya en la Watchlist',
+        title: 'Duplicado',
         text: `${movie.Title} ya está en tu Watchlist.`,
         icon: 'info',
         confirmButtonText: 'Entendido',
@@ -62,87 +74,84 @@ const SearchPage = () => {
     }
   };
 
-  const handleNextPage = () => {
-    if (currentPage < Math.ceil(totalResults / 10)) {
-      setCurrentPage(currentPage + 1);
-      fetchMovies(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      fetchMovies(currentPage - 1);
-    }
-  };
-
   return (
-    <>
-      <Navbar />
-      <div className="p-4">
-        <article className="flex">
+    <div className={`${theme} bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen`}>
+      {/* Cabecera */}
+      <header className="bg-blue-500 dark:bg-blue-700 p-4 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-white">
+          <Link to="/">filmFinder</Link>
+        </h1>
+        <div className="flex items-center space-x-4">
+          <Link to="/watchlist" className="text-white hover:underline">
+            Watchlist
+          </Link>
+          <button
+            onClick={toggleTheme}
+            className="text-white p-2 rounded-full bg-gray-800 hover:bg-gray-700"
+          >
+            {theme === 'light' ? <FaMoon /> : <FaSun />}
+          </button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="bg-fondo text-center py-12 text-white">
+        <h2 className="text-4xl font-bold mb-4">Encuentra tu próxima película</h2>
+        <p className="text-lg mb-6">
+          Busca entre millones de películas y agrega tus favoritas a tu Watchlist.
+        </p>
+        <button
+          onClick={() => document.getElementById('search').scrollIntoView({ behavior: 'smooth' })}
+          className="bg-white text-blue-700 px-6 py-2 rounded-lg font-bold hover:bg-gray-200"
+        >
+          Explorar Películas
+        </button>
+      </section>
+
+      {/* Búsqueda */}
+      <div id="search" className="p-8">
+        <div className="max-w-xl mx-auto flex items-center bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
           <input
             type="text"
-            placeholder="Search for a movie"
-            className="border p-2 rounded rounded-e-none w-full mt-4 text-black"
+            placeholder="Buscar películas..."
+            className="flex-grow px-4 py-2 focus:outline-none text-black"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button onClick={() => fetchMovies(1)} className="bg-blue-500 text-white px-4 py-2 mt-4 rounded rounded-s-none">
-            Buscar
+          <button
+            onClick={fetchMovies}
+            className="bg-blue-500 dark:bg-blue-700 text-white px-4 py-2"
+          >
+            <FaSearch />
           </button>
-        </article>
-        {error && <div className="text-red-500 mt-2">{error}</div>}
-
-        {movies.length === 0 && (
-          <>
-            <p className="text-gray-400 m-4 text-center"> Encontrar la película que estás buscando nunca fue tan fácil, al alcance de un clíck. </p>
-            <img src={Icono} alt="" className='d-block mx-auto' />
-          </>
-        )}
-
-
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-          {movies.map((movie) => (
-            <div key={movie.imdbID} className="flex flex-col movie-item border-b p-2 m-4 justify-between rounded-lg bg-gray-800 hover:bg-gray-700">
-              <Link to={`/movie/${movie.imdbID}`}>
-                <img src={movie.Poster !== 'N/A' ? movie.Poster : placeholder} className="w-full h-64 object-contain rounded" alt={`${movie.Title} poster`}/>
-              </Link>
-              <h3 className="text-lg mt-2">
-                <Link to={`/movie/${movie.imdbID}`} className="hover:underline">
-                  {movie.Title}
-                </Link>
-              </h3>
-              <button onClick={() => addToWatchlist(movie)} className="bg-green-500 text-white px-2 py-1 rounded"> Agregar a la Watchlist </button>
-            </div>
-          ))}
         </div>
-
-        {movies.length > 0 && totalResults > 10 && (
-          <div className="flex justify-between mt-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={handlePrevPage}
-              className={`bg-blue-500 text-white px-4 py-2 rounded ${
-                currentPage === 1 && 'opacity-50 cursor-not-allowed'
-              }`}
-            >
-              Anterior
-            </button>
-
-            <button
-              disabled={currentPage === Math.ceil(totalResults / 10)}
-              onClick={handleNextPage}
-              className={`bg-blue-500 text-white px-4 py-2 rounded ${
-                currentPage === Math.ceil(totalResults / 10) && 'opacity-50 cursor-not-allowed'
-              }`}
-            >
-              Próximo
-            </button>
-          </div>
-        )}
       </div>
-    </>
+
+      {/* Resultados */}
+      <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {movies.map((movie) => (
+          <div key={movie.imdbID} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <img
+              src={movie.Poster !== 'N/A' ? movie.Poster : placeholder}
+              alt={movie.Title}
+              className="w-full h-64 object-contain"
+            />
+            <div className="p-4">
+              <h3 className="text-lg font-bold text-center text-black dark:text-white">{movie.Title}</h3>
+              {/* <p className="text-sm text-gray-600 dark:text-gray-400">{movie.Year}</p> */}
+              <button
+                onClick={() => addToWatchlist(movie)}
+                className="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600"
+              >
+                <FaHeart />
+                <span>Agregar</span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <Footer/>
+    </div>
   );
 };
 

@@ -1,10 +1,42 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaMoon, FaSun } from 'react-icons/fa';
 
-const Navbar = () => (
-  <div className="bg-fondoMovil h-60 bg-no-repeat p-4 flex justify-between items-center md:bg-fondo md:bg-cover md:h-96 ">
-    <Link to="/" className="sm:text-5xl text-white font-bold">filmFinder</Link>
-    <Link to="/watchlist" className="sm:text-5xl text-white font-bold">Mi Watchlist</Link>
-  </div>
-);
+const Navbar = () => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme); // Guarda el tema en localStorage
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
+  return (
+    <nav className="bg-blue-500 dark:bg-blue-700 p-4 flex justify-between items-center">
+      <h1 className="text-2xl font-bold text-white">
+        <Link to="/">filmFinder</Link>
+      </h1>
+      <div className="flex items-center space-x-4">
+        <Link to="/watchlist" className="text-white hover:underline">
+          Watchlist
+        </Link>
+        <button
+          onClick={toggleTheme}
+          className="text-white p-2 rounded-full bg-gray-800 hover:bg-gray-700"
+        >
+          {theme === 'light' ? <FaMoon /> : <FaSun />}
+        </button>
+      </div>
+    </nav>
+  );
+};
 
 export default Navbar;

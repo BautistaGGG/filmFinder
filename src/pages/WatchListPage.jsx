@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
 import Navbar from '../componentes/Navbar';
-import placeholder from '../assets/placeholder.svg';
+import Footer from '../componentes/Footer';
+import Swal from 'sweetalert2';
 
 const WatchlistPage = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -24,41 +24,38 @@ const WatchlistPage = () => {
         const updatedWatchlist = watchlist.filter((movie) => movie.imdbID !== imdbID);
         setWatchlist(updatedWatchlist);
         localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
-  
-        Swal.fire({
-          title: 'Eliminada!',
-          text: 'La película ha sido eliminada de tu Watchlist.',
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
+        Swal.fire('Eliminado', 'La película ha sido eliminada de tu Watchlist.', 'success');
       }
     });
   };
-  
 
   return (
-    <>
+    <div className="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
-      <div className="p-4">
-        <h1 className="text-2xl font-bold">My Watchlist</h1>
+      <div className="p-8">
+        <h1 className="text-3xl font-bold text-center mb-6">Mi Watchlist</h1>
         {watchlist.length === 0 ? (
-          <p className="text-gray-500 mt-4">Tu watchList está vacía. Agrega algunas películas!</p>
+          <p className="text-center text-gray-500">Tu Watchlist está vacía. ¡Agrega películas desde la página principal!</p>
         ) : (
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {watchlist.map((movie) => (
-              <div key={movie.imdbID} className="border p-4 bg-gray-800 rounded-lg hover:bg-gray-700">
-                <img src={movie.Poster !== 'N/A' ? movie.Poster : placeholder} className="w-full h-64 object-contain rounded-md mb-2" alt={`${movie.Title} poster`}/>
-                <h3 className="text-lg font-bold">{movie.Title}</h3>
-                <p className="text-sm text-gray-400">{movie.Year}</p>
-                <button onClick={() => removeFromWatchlist(movie.imdbID)} className="bg-red-500 text-white px-2 py-1 rounded mt-2">
-                  Eliminar
-                </button>
+              <div
+                key={movie.imdbID}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+              >
+                <img src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'} alt={movie.Title} className="w-full h-64 object-contain"/>
+                <div className="p-4">
+                  <h3 className="text-lg text-center font-bold text-black dark:text-white">{movie.Title}</h3>
+                  <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Year}</p>
+                  <button onClick={() => removeFromWatchlist(movie.imdbID)} className="mt-2 mx-auto bg-red-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-600"> Eliminar </button>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 
