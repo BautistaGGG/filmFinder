@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../componentes/Navbar';
+import Rating from '../assets/star.png'
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -75,13 +76,13 @@ const MovieDetailPage = () => {
               <span className="font-bold">Actores:</span> {movie.Actors}
             </p>
             <p>
-              <span className="font-bold">Languaje:</span> {movie.Language}
+              <span className="font-bold">{movie.Language.length > 1 && (<span>Lenguajes:</span>)} {movie.Language.length < 1 && (<span> Lenguaje: </span>)}</span> {movie.Language}
             </p>
             <p>
               <span className="font-bold">Ratings:</span>{' '}
               {movie.Ratings.map((rating) => (
                 <span key={rating.Source} className="block">
-                  {rating.Source}: {rating.Value}
+                  {rating.Source}: <img src={Rating} className='inline'/> {rating.Value}
                 </span>
               ))}
             </p>

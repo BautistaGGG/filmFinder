@@ -8,9 +8,9 @@ import MovieDetail from './pages/MovieDetail';
 const App = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<SearchPage />} />
-      <Route path="/watchlist" element={<WatchlistPage />} />
-      <Route path="/movie/:id" element={<MovieDetail />} />
+      <Route path="/" element={<SearchPage/>} />
+      <Route path="/watchlist" element={<WatchlistPage/>} />
+      <Route path="/movie/:id" element={<MovieDetail/>} />
     </Routes>
   </Router>
 );

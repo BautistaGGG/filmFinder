@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import Navbar from '../componentes/Navbar';
 import placeholder from '../assets/placeholder.svg';
 
@@ -11,10 +12,29 @@ const WatchlistPage = () => {
   }, []);
 
   const removeFromWatchlist = (imdbID) => {
-    const updatedWatchlist = watchlist.filter((movie) => movie.imdbID !== imdbID);
-    setWatchlist(updatedWatchlist);
-    localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Quieres eliminar esta película de tu Watchlist?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedWatchlist = watchlist.filter((movie) => movie.imdbID !== imdbID);
+        setWatchlist(updatedWatchlist);
+        localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
+  
+        Swal.fire({
+          title: 'Eliminada!',
+          text: 'La película ha sido eliminada de tu Watchlist.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      }
+    });
   };
+  
 
   return (
     <>

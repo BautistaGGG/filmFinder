@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2'; 
 import Navbar from '../componentes/Navbar';
 import placeholder from '../assets/placeholder.svg';
+import Icono from '../assets/Icon.png';
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
@@ -9,12 +11,10 @@ const SearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const fetchMovies = async (page = 1) => {
     setError('');
     setMovies([]);
-    setSuccess('');
 
     if (!query.trim()) {
       setError('Ingresa una película para buscar en la base de datos.');
@@ -22,20 +22,17 @@ const SearchPage = () => {
     }
 
     try {
-      const response = await fetch(
-        `https://www.omdbapi.com/?apikey=1b3bb8c1&s=${query}&page=${page}`
-      );
+      const response = await fetch(`https://www.omdbapi.com/?apikey=1b3bb8c1&s=${query}&page=${page}`);
       const data = await response.json();
-      
+
       if (data.Response === 'False') {
         setError(data.Error || 'No se encontraron resultados.');
       } else {
         setMovies(data.Search);
         setTotalResults(parseInt(data.totalResults, 10));
-        // console.log(data);
       }
     } catch (err) {
-      setError('An error occurred while fetching data:' + err.message);
+      setError('Ocurrió un error al cargar la data: ' + err.message);
     }
   };
 
@@ -46,9 +43,22 @@ const SearchPage = () => {
     if (!isAlreadyAdded) {
       watchlist.push(movie);
       localStorage.setItem('watchlist', JSON.stringify(watchlist));
-      setSuccess(`${movie.Title} fue agregada a tu Watchlist!`);
+
+      // SweetAlert2: Notificación de éxito
+      Swal.fire({
+        title: 'Agregado a la Watchlist',
+        text: `${movie.Title} ha sido agregado correctamente.`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } else {
-      setError(`${movie.Title} ya se encuentra en tu Watchlist.`);
+      // SweetAlert2: Notificación de duplicado
+      Swal.fire({
+        title: 'Ya en la Watchlist',
+        text: `${movie.Title} ya está en tu Watchlist.`,
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+      });
     }
   };
 
@@ -70,14 +80,27 @@ const SearchPage = () => {
     <>
       <Navbar />
       <div className="p-4">
-        {/* <h1 className="text-2xl font-bold">filmFinder</h1> */}
-        <article className='flex'>
-          <input type="text" placeholder="Search for a movie" className="border p-2 rounded rounded-e-none w-full mt-4 text-black" value={query} onChange={(e) => setQuery(e.target.value)}/>
-          <button onClick={() => fetchMovies(1)} className="bg-blue-500 text-white px-4 py-2 mt-4 rounded rounded-s-none">Buscar</button>
+        <article className="flex">
+          <input
+            type="text"
+            placeholder="Search for a movie"
+            className="border p-2 rounded rounded-e-none w-full mt-4 text-black"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <button onClick={() => fetchMovies(1)} className="bg-blue-500 text-white px-4 py-2 mt-4 rounded rounded-s-none">
+            Buscar
+          </button>
         </article>
-
         {error && <div className="text-red-500 mt-2">{error}</div>}
-        {success && <div className="text-green-500 mt-2">{success}</div>}
+
+        {movies.length === 0 && (
+          <>
+            <p className="text-gray-400 m-4 text-center"> Encontrar la película que estás buscando nunca fue tan fácil, al alcance de un clíck. </p>
+            <img src={Icono} alt="" className='d-block mx-auto' />
+          </>
+        )}
+
 
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {movies.map((movie) => (
@@ -90,32 +113,31 @@ const SearchPage = () => {
                   {movie.Title}
                 </Link>
               </h3>
-                <button onClick={() => addToWatchlist(movie)} className="bg-green-500 text-white px-2 py-1 rounded">
-                  Agregar a la Watchlist
-                </button>
+              <button onClick={() => addToWatchlist(movie)} className="bg-green-500 text-white px-2 py-1 rounded"> Agregar a la Watchlist </button>
             </div>
           ))}
         </div>
 
-        {totalResults > 10 && (
+        {movies.length > 0 && totalResults > 10 && (
           <div className="flex justify-between mt-4">
             <button
               disabled={currentPage === 1}
               onClick={handlePrevPage}
-              className={`bg-gray-500 text-white px-4 py-2 rounded ${
+              className={`bg-blue-500 text-white px-4 py-2 rounded ${
                 currentPage === 1 && 'opacity-50 cursor-not-allowed'
               }`}
             >
-              Previous
+              Anterior
             </button>
+
             <button
               disabled={currentPage === Math.ceil(totalResults / 10)}
               onClick={handleNextPage}
-              className={`bg-gray-500 text-white px-4 py-2 rounded ${
+              className={`bg-blue-500 text-white px-4 py-2 rounded ${
                 currentPage === Math.ceil(totalResults / 10) && 'opacity-50 cursor-not-allowed'
               }`}
             >
-              Next
+              Próximo
             </button>
           </div>
         )}
