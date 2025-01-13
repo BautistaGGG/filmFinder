@@ -33,7 +33,7 @@ const WatchlistPage = () => {
     <div className="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
       <div className="p-8">
-        <h1 className="text-3xl font-bold text-center mb-6">Mi Watchlist</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800 dark:text-white">Mi Watchlist</h1>
         {watchlist.length === 0 ? (
           <p className="text-center text-gray-500">Tu Watchlist está vacía. ¡Agrega películas desde la página principal!</p>
         ) : (

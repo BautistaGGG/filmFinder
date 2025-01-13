@@ -25,8 +25,8 @@ const Navbar = () => {
         <Link to="/">filmFinder</Link>
       </h1>
       <div className="flex items-center space-x-4">
-        <Link to="/watchlist" className="text-white hover:underline">
-          Watchlist
+        <Link to="/watchlist" className="text-white text-2xl font-bold hover:underline">
+          WatchList
         </Link>
         <button
           onClick={toggleTheme}

@@ -51,32 +51,25 @@ const MovieDetailPage = () => {
     <div className="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
       <div className="p-8">
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
-        >
+        <button onClick={() => navigate(-1)} className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4">
           Volver
         </button>
         <div className="flex flex-col lg:flex-row gap-6">
-          <img
-            src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'}
-            alt={movie.Title}
-            className="w-full lg:w-1/3 h-96 object-cover rounded-lg"
-          />
+          <img src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'} alt={movie.Title} className="w-full lg:w-1/3 h-96 object-contain rounded-lg"/>
           <div>
-            <h1 className="text-3xl font-bold">{movie.Title}</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">{movie.Year}</p>
-            <p className="mt-4">{movie.Plot}</p>
-            <p className="mt-4">
+            <h1 className="text-3xl font-bold text-gray-500 dark:text-white">{movie.Title}</h1>
+            <p className="text-gray-500 dark:text-white mt-2">{movie.Year}</p>
+            <p className="mt-4 text-gray-500 dark:text-white">{movie.Plot}</p>
+            <p className="mt-4 text-gray-500 dark:text-white">
               <span className="font-bold">Género:</span> {movie.Genre}
             </p>
-            <p>
+            <p className="text-gray-500 dark:text-white">
               <span className="font-bold">Director:</span> {movie.Director}
             </p>
-            <p>
+            <p className="text-gray-500 dark:text-white">
               <span className="font-bold">Actores:</span> {movie.Actors}
             </p>
-            <p>
+            <p className="text-gray-500 dark:text-white">
               <span className="font-bold">Idioma:</span> {movie.Language}
             </p>
           </div>
