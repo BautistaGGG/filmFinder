@@ -20,20 +20,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-500 dark:bg-blue-700 p-4 flex justify-between items-center">
-      <h1 className="text-2xl font-bold text-white">
-        <Link to="/">filmFinder</Link>
-      </h1>
-      <div className="flex items-center space-x-4">
-        <Link to="/watchlist" className="text-white text-2xl font-bold hover:underline">
-          WatchList
-        </Link>
-        <button
-          onClick={toggleTheme}
-          className="text-white p-2 rounded-full bg-gray-800 hover:bg-gray-700"
-        >
-          {theme === 'light' ? <FaMoon /> : <FaSun />}
-        </button>
+    <nav className="bg-fondoMovil md:bg-fondo text-center pt-[6em] pb-[6em] text-white">      
+      <button onClick={toggleTheme} className="absolute top-4 right-4 text-white p-2 rounded-full bg-gray-800 hover:bg-gray-700">
+        {theme === 'light' ? <FaMoon /> : <FaSun />}
+      </button>
+      <div className="flex items-center justify-between max-w-4xl mx-auto">
+        <h1 className="text-white text-5xl font-bold "> <Link to="/">filmFinder</Link> </h1>
+        <h1 className="text-white text-3xl font-bold hover:text-gray-300"> <Link to="/watchlist"> WatchList </Link> </h1>
       </div>
     </nav>
   );

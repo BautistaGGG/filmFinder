@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './index.css';
-import SearchPage from './pages/SearchPage';
+import SearchPage from './pages/Searchpage';
 import WatchlistPage from './pages/WatchlistPage';
 import MovieDetail from './pages/MovieDetail';
 
