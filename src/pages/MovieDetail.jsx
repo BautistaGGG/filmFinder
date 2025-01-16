@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../componentes/Navbar';
 import Footer from '../componentes/Footer';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -51,8 +52,9 @@ const MovieDetailPage = () => {
     <div className="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
       <div className="p-8">
-        <button onClick={() => navigate(-1)} className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4">
-          Volver
+        <button onClick={() => navigate(-1)} className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 mb-4 rounded-lg">
+          <FaArrowLeft />
+          <span>Volver</span>
         </button>
         <div className="flex flex-col lg:flex-row gap-6">
           <img src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'} alt={movie.Title} className="w-full lg:w-1/3 h-96 object-contain rounded-lg"/>

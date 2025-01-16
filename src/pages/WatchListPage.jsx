@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import Navbar from '../componentes/Navbar';
 import Footer from '../componentes/Footer';
 import Swal from 'sweetalert2';
-import { FaMinus, FaStar } from 'react-icons/fa';
+import filmIcon from '../assets/IconDark.png';
+import starIcon from '../assets/star.png';
 
 const WatchlistPage = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -78,28 +79,40 @@ const WatchlistPage = () => {
     <div className="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
       <div className="p-8">
-        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800 dark:text-white">Mi Watchlist</h1>
+        <h1 className="text-4xl font-bold text-center my-6 text-gray-800 dark:text-white">Mi Watchlist</h1>
         {watchlist.length === 0 ? (
-          <p className="text-center text-gray-500">Tu Watchlist está vacía. ¡Agrega películas desde la página principal!</p>
+          <>
+          <img src={filmIcon} className='block my-6 mx-auto'/> 
+          <p className="text-xl my-6 text-center text-gray-500">Tu Watchlist está vacía. ¡Agrega películas desde la página principal!</p>
+          </>
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {watchlist.map((movie) => (
-                <div key={movie.imdbID} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                  <img src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'} alt={movie.Title} className="w-full h-64 object-contain" />
-                  <div className="p-4">
-                    <h3 className="text-lg text-center font-bold text-black dark:text-white">{movie.Title}</h3>
-                    <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Year}</p>
+                <div key={movie.imdbID} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col justify-between h-full">
+                  <div className="p-4 flex flex-col">
+                    <img src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'} alt={movie.Title} className="w-40 h-56 object-contain rounded-lg"/>
+                    <div className='flex flex-row justify-center items-center'>
+                      <h3 className="text-lg font-bold text-center text-black dark:text-white">{movie.Title}</h3>
+                      <div className='flex flex-row justify-center items-center ml-2'>
+                        <img src={starIcon} />
+                        <p className="text-sm text-center pl-1 text-gray-600 dark:text-gray-400"> {movie.imdbRating || 'N/A'}</p>
+                      </div>
+                    </div>
                     <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Genre}</p>
-                    <p className="text-sm text-center text-gray-600 dark:text-gray-400"> <FaStar/> {movie.imdbRating || 'N/A'}</p>
+                    <p className="text-sm text-center text-gray-600 dark:text-gray-400"> {movie.Runtime}</p>
+                    <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Plot}</p>
+                  </div>
+                  <div className="mt-auto">
                     <button onClick={() => removeFromWatchlist(movie.imdbID)} className="mt-2 mx-auto bg-red-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-600">
-                      <FaMinus />
                       Eliminar
                     </button>
                   </div>
-                </div>
+                </div> 
               ))}
             </div>
+
+            
 
             <div className="flex justify-center mt-8">
               <button onClick={clearWatchlist} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"> Limpiar Watchlist </button>

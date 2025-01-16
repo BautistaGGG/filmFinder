@@ -6,6 +6,8 @@ import placeholder from '../assets/placeholder.svg';
 import Footer from '../componentes/Footer';
 import Navbar from '../componentes/Navbar';
 import starIcon from '../assets/star.png';
+import filmIcon from "../assets/IconDark.png";
+import filmIcon2 from "../assets/IconWhite.png";
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
@@ -118,6 +120,18 @@ const SearchPage = () => {
         </div>
       </div>
 
+      {/* Texto por defecto */}
+      {movies.length === 0 && !loading && (
+        <>
+          {theme == 'light' ? 
+            <img src={filmIcon} className='block my-0 mx-auto'/> : 
+            <img src={filmIcon2} className='block my-0 mx-auto'/>
+          }
+          <h3 className='text-center text-4xl text-gray-800 my-4 dark:text-white font-bold'> Te invitamos a explorar nuestro contenido </h3>
+          <p className='text-center text-xl text-gray-500 my-4 dark:text-white'> Contamos con una watchList para que almacenes tus films favoritos </p>
+        </>
+      )}
+
       {/* Indicador de carga */}
       {loading && (
         <div className="flex justify-center items-center my-8">
@@ -129,29 +143,30 @@ const SearchPage = () => {
       {!loading && (
         <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {movies.map((movie) => (
-            <div key={movie.imdbID} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-row justify-between">
+            <div key={movie.imdbID} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col justify-between h-full">
               <Link to={`/movie/${movie.imdbID}`}>
                 <img src={movie.Poster !== 'N/A' ? movie.Poster : placeholder} alt={movie.Title} className="w-full h-64 object-contain" />
               </Link>
-              <div className="p-4 flex flex-col justify-center items-center">
+              <div className="p-4 flex flex-col">
                 <div className='flex flex-row justify-center items-center'>
                   <Link to={`/movie/${movie.imdbID}`} className='flex flex-row justify-between items-center'>
-                    <h3 className=" text-lg font-bold text-center text-black dark:text-white">{movie.Title}</h3>
+                    <h3 className="text-lg font-bold text-center text-black dark:text-white">{movie.Title}</h3>
                   </Link>
-                  <div className='flex flex-row justify-center items-center'>
+                  <div className='flex flex-row justify-center items-center ml-2'>
                     <img src={starIcon} />
-                    <p className="text-sm text-center text-gray-600 dark:text-gray-400"> {movie.imdbRating || 'N/A'}</p>
+                    <p className="text-sm text-center pl-1 text-gray-600 dark:text-gray-400"> {movie.imdbRating || 'N/A'}</p>
                   </div>
                 </div>
-                <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Plot}</p>
-                <p className="text-sm text-center text-gray-600 dark:text-gray-400"> {movie.Runtime}</p>
                 <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Genre}</p>
-                <button onClick={() => addToWatchlist(movie)} className="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600">
-                  <FaPlus />
-                  <span> Agregar </span>
+                <p className="text-sm text-center text-gray-600 dark:text-gray-400"> {movie.Runtime}</p>
+                <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Plot}</p>
+              </div>
+              <div className="mt-auto">
+                <button onClick={() => addToWatchlist(movie)} className="bg-green-500 text-white px-4 py-2 my-0 mx-auto rounded-lg flex items-center space-x-2 hover:bg-green-600">
+                  <FaPlus /> <span> Agregar </span>
                 </button>
               </div>
-            </div>
+            </div>          
           ))}
         </div>
       )}
