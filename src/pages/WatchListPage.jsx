@@ -26,7 +26,7 @@ const WatchlistPage = () => {
       );
       setWatchlist(updatedWatchlist);
       setLoading(false);
-      console.log(updatedWatchlist);
+      // console.log(updatedWatchlist);
     };
 
     fetchWatchlistDetails();
@@ -91,7 +91,7 @@ const WatchlistPage = () => {
               {watchlist.map((movie) => (
                 <div key={movie.imdbID} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col justify-between h-full">
                   <div className="p-4 flex flex-col">
-                    <img src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'} alt={movie.Title} className="w-40 h-56 object-contain rounded-lg"/>
+                    <img src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'} alt={movie.Title} className="h-56 object-contain rounded-lg"/>
                     <div className='flex flex-row justify-center items-center'>
                       <h3 className="text-lg font-bold text-center text-black dark:text-white">{movie.Title}</h3>
                       <div className='flex flex-row justify-center items-center ml-2'>
@@ -103,7 +103,7 @@ const WatchlistPage = () => {
                     <p className="text-sm text-center text-gray-600 dark:text-gray-400"> {movie.Runtime}</p>
                     <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Plot}</p>
                   </div>
-                  <div className="mt-auto">
+                  <div className="mt-auto mb-6">
                     <button onClick={() => removeFromWatchlist(movie.imdbID)} className="mt-2 mx-auto bg-red-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-600">
                       Eliminar
                     </button>

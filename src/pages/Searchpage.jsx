@@ -15,6 +15,7 @@ const SearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1); // Página actual
   const [theme, setTheme] = useState('light'); // Modo claro/oscuro
   const [loading, setLoading] = useState(false); // Estado de carga
+  // const [peliDuplicada, setPeliDuplicada] = useState(false); // Estado de película duplicada
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
@@ -42,7 +43,7 @@ const SearchPage = () => {
       if (data.Response === 'False') {
         Swal.fire({
           title: 'No encontrado',
-          text: 'La base de datos no posee ese título.',
+          text: 'La base de datos no posee ese título. Intenta con otro',
           icon: 'info',
           confirmButtonText: 'Entendido',
         });
@@ -111,7 +112,7 @@ const SearchPage = () => {
       <Navbar theme={theme} toggleTheme={toggleTheme} />
 
       {/* Búsqueda */}
-      <div id="search" className="-mt-5 pb-8">
+      <div id="search" className="-mt-5 pb-8 mx-6">
         <div className="max-w-xl mx-auto flex items-center bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
           <input type="text" placeholder="Buscar películas..." className="flex-grow px-4 py-2 focus:outline-none text-black border border-r-gray-800" value={query} onChange={(e) => setQuery(e.target.value)}/>
           <button onClick={() => fetchMovies(1)} className="bg-white text-gray-800 dark:bg-gray-800 dark:text-white px-4 py-2">
@@ -127,8 +128,8 @@ const SearchPage = () => {
             <img src={filmIcon} className='block my-0 mx-auto'/> : 
             <img src={filmIcon2} className='block my-0 mx-auto'/>
           }
-          <h3 className='text-center text-4xl text-gray-800 my-4 dark:text-white font-bold'> Te invitamos a explorar nuestro contenido </h3>
-          <p className='text-center text-xl text-gray-500 my-4 dark:text-white'> Contamos con una watchList para que almacenes tus films favoritos </p>
+          <h3 className='text-center text-2xl lg:text-4xl text-gray-800 my-4 dark:text-white font-bold'> Te invitamos a explorar nuestro contenido </h3>
+          <p className='text-center text-md lg:text-xl text-gray-500 my-4 dark:text-white'> Contamos con una watchList para que almacenes tus films favoritos </p>
         </>
       )}
 
@@ -161,10 +162,13 @@ const SearchPage = () => {
                 <p className="text-sm text-center text-gray-600 dark:text-gray-400"> {movie.Runtime}</p>
                 <p className="text-sm text-center text-gray-600 dark:text-gray-400">{movie.Plot}</p>
               </div>
-              <div className="mt-auto">
+              <div className="mt-auto mb-6">
                 <button onClick={() => addToWatchlist(movie)} className="bg-green-500 text-white px-4 py-2 my-0 mx-auto rounded-lg flex items-center space-x-2 hover:bg-green-600">
                   <FaPlus /> <span> Agregar </span>
                 </button>
+                {/* <button onClick={() => removeFromWatchlist(movie.imdbID)} className="mt-2 mx-auto bg-red-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-600">
+                  Eliminar
+                </button> */}
               </div>
             </div>          
           ))}

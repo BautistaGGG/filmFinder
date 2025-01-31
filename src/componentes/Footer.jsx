@@ -1,5 +1,5 @@
 const Footer = () => (
-    <footer className="bg-gray-800 text-white text-center py-4 dark:bg-slate-50 dark:text-black">
+  <footer className="bg-gray-800 text-white text-center text-xs lg:text-base py-4 dark:bg-slate-50 dark:text-black">
     <p>© 2025 filmFinder - Todos los derechos reservados.</p>
     <p>
       <a href="https://github.com"> GitHub </a>
